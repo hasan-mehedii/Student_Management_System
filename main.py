@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
+import pymysql
 
 class student():
 
@@ -31,7 +33,50 @@ class student():
 
         self.table.pack(fill="both", expand=1)
 
+    def addFrameFun(self):
+        self.addFrame = tk.Frame(self.root, bd=5, relief="ridge", bg=self.color(150, 180, 250))
+        self.addFrame.place(width=self.width/3, height=self.height-220, x=self.width/3+80, y=100)
+
+        roll_label = tk.Label(self.addFrame, text="Roll No:", bg=self.color(150, 180, 250), font=("Arial", 15, "bold"))
+        roll_label.grid(row=0, column=0, padx=20, pady=30)
+        self.roll = tk.Entry(self.addFrame, width=18, font=("Arial", 15, "bold"), bd=3)
+        self.roll.grid(row=0, column=1, padx=10, pady=30)
+
+        name_label = tk.Label(self.addFrame, text="Name:", bg=self.color(150, 180, 250), font=("Arial", 15, "bold"))
+        name_label.grid(row=1, column=0, padx=20, pady=30)
+        self.name = tk.Entry(self.addFrame, width=18, font=("Arial", 15, "bold"), bd=3)
+        self.name.grid(row=1, column=1, padx=10, pady=30)
+
+        sub_label = tk.Label(self.addFrame, text="Subject:", bg=self.color(150, 180, 250), font=("Arial", 15, "bold"))
+        sub_label.grid(row=2, column=0, padx=20, pady=30)
+        self.sub = tk.Entry(self.addFrame, width=18, font=("Arial", 15, "bold"), bd=3)
+        self.sub.grid(row=2, column=1, padx=10, pady=30)
+
+        grade_label = tk.Label(self.addFrame, text="Grade:", bg=self.color(150, 180, 250), font=("Arial", 15, "bold"))
+        grade_label.grid(row=3, column=0, padx=20, pady=30)
+        self.grade = tk.Entry(self.addFrame, width=18, font=("Arial", 15, "bold"), bd=3)
+        self.grade.grid(row=3, column=1, padx=10, pady=30)
+
+        ok_button = tk.Button(self.addFrame, text="Enter", bd=3, relief="raised", font=("Arial", 20, "bold"), width=20)
+        ok_button.grid(row=4, column=0, padx=20, pady=30, columnspan=2)
+
+    def addFunc(self):
+        roll_no = self.roll.get()
+        name = self.name.get()
+        subject = self.sub.get()
+        grade = self.grade.get()
+
+        if roll_no and name and subject and grade:
+            r_no = int(roll_no)
+
+        else:
+            tk.messagebox.showerror("Error", "Please fill all input fields")
+
+    def database(self):
+        self.con = pymysql.connect(host="")
+
     def __init__(self, root):
+        self.table = None
         self.root = root
         self.root.title("Students record")
 
@@ -39,7 +84,7 @@ class student():
         self.height = self.root.winfo_screenheight()
         self.root.geometry(f"{self.width}x{self.height}+0+0")
 
-        title = tk.Label(self.root, text = "Student record management system",
+        title = tk.Label(self.root, text = "Students Record Management System",
                          bd = 4, relief = "raised", bg = "light blue",
                          font = ("Times New Roman", 50, "bold"))
         title.pack(side = "top", fill = "x")
@@ -49,7 +94,7 @@ class student():
         optFrame.place(width=self.width/3, height=self.height-180, x=50, y=100)
 
         # buttons
-        addBtn = tk.Button(optFrame, text="Add Student", bd=3, relief="raised", bg="light gray", width=20, font=("Arial", 20, "bold"))
+        addBtn = tk.Button(optFrame, command=self.addFrameFun, text="Add Student", bd=3, relief="raised", bg="light gray", width=20, font=("Arial", 20, "bold"))
         addBtn.grid(row=0, column=0, padx=30, pady=25)
 
         searchBtn = tk.Button(optFrame, text="Search Student", bd=3, relief="raised", bg="light gray", width=20, font=("Arial", 20, "bold"))
