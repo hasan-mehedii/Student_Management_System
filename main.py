@@ -68,12 +68,35 @@ class student():
 
         if roll_no and name and subject and grade:
             r_no = int(roll_no)
+            try:
+                self.database()
+                self.cur.execute(
+                    "insert into student(roll, name, sub, grade) values(%s, %s, %s, %s)",
+                    (r_no, name, subject, grade)
+                )
+                self.con.commit()
+                tk.messagebox.showinfo("Success", f"Student {name} with Roll No: {r_no} is registered successfully")
+                self.desAdd()
+
+                self.cur.execute("select * from student where r_no = %s",r_no)
+                row = self.cur.fetchone()
+                self.table.delete(*self.table.get_children())
+                self.table.insert('', tk.END, values=row)
+                self.con.close()
+
+            except Exception as e:
+                tk.messagebox.showerror("Error", f"Error: {e}")
+                self.desAdd()
 
         else:
             tk.messagebox.showerror("Error", "Please fill all input fields")
 
+    def desAdd(self):
+        self.addFrame.destroy()
+
     def database(self):
-        self.con = pymysql.connect(host="")
+        self.con = pymysql.connect(host="localhost", user="root", password="80285290", database="db_mh")
+        self.cur = self.con.cursor()
 
     def __init__(self, root):
         self.table = None
